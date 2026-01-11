@@ -117,25 +117,30 @@ void image_fractale(const char *nom_fichier, Pixmap *p) {
 }
 
 void images_independantes(Pixmap *p) {
-char *noms_fichiers[] = {"im0.ppm", "im1.ppm", "im2.ppm", "im3.ppm", "im4.ppm", "im5.ppm", "im6.ppm", "im7.ppm", "im8.ppm", "im9.ppm"};
+    char *noms_fichiers[] = {"im0.ppm", "im1.ppm", "im2.ppm", "im3.ppm", "im4.ppm", "im5.ppm", "im6.ppm", "im7.ppm", "im8.ppm", "im9.ppm"};
 
-double objectif_x = -0.99;
-double objectif_y = 0.3;
-double largeur = X2 - X1;
-double hauteur = Y1 - Y2;
+    double objectif_x = -0.99;
+    double objectif_y = 0.3;
+    double zoom = 0.7;
+    
+    double largeur_courante = X2 - X1; 
+    double hauteur_courante = Y1 - Y2; 
+    
+    double centre_x = (X1 + X2) / 2.0;
+    double centre_y = (Y1 + Y2) / 2.0;
 
-double deplacement_par_iteration_x = (objectif_x - (X1 + X2) / 2.0) / 10;
-double deplacement_par_iteration_y = (objectif_y - (Y1 + Y2) / 2.0) / 10;
+    for (int i = 0; i < 10; i++) {
+        X1_1 = centre_x - largeur_courante / 2.0;
+        X2_1 = centre_x + largeur_courante / 2.0;
+        Y1_1 = centre_y + hauteur_courante / 2.0;
+        Y2_1 = centre_y - hauteur_courante / 2.0;
 
-for (int i = 0; i < 10; i++) {
-double nouveau_x = (X1 + X2) / 2.0 + deplacement_par_iteration_x * i;
-double nouveau_y = (Y1 + Y2) / 2.0 + deplacement_par_iteration_y * i;
+        image_fractale(noms_fichiers[i], p);
 
-X1_1 = nouveau_x - largeur / 2.0; //gauche
-X2_1 = nouveau_x + largeur / 2.0; //droite
-Y1_1 = nouveau_y + hauteur / 2.0; //haut
-Y2_1 = nouveau_y - hauteur / 2.0; //bas
+        largeur_courante = largeur_courante * zoom;
+        hauteur_courante = hauteur_courante * zoom;
 
-image_fractale(noms_fichiers[i], p);
-}
+        centre_x = centre_x + (objectif_x - centre_x) * 0.3;
+        centre_y = centre_y + (objectif_y - centre_y) * 0.3;
+    }
 }
